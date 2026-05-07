@@ -1,7 +1,14 @@
+databases:
+  - name: docbook-postgres
+    plan: free            # Free Postgres: 90-day expiry, 256 MB storage. Fine for a demo.
+    databaseName: docbook
+    user: docbook
+
 services:
   - type: web
     name: docbook-backend
     env: python
+    plan: free            # Free web service: 750h/mo, sleeps after 15 min idle, ~30s cold-start.
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
@@ -11,10 +18,13 @@ services:
       - key: APP_ENV
         value: production
       - key: DATABASE_URL
-        sync: false
+        # Auto-wired from the docbook-postgres instance above.
+        fromDatabase:
+          name: docbook-postgres
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: 60
       - key: CORS_ORIGINS
-        sync: false
+        sync: false        # Set this manually in the Render dashboard once you have the Vercel URL.
