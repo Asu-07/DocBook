@@ -1,0 +1,73 @@
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-header__title">My Appointments</h1>
+    <p class="page-header__subtitle">Manage and track all your scheduled appointments</p>
+  </div>
+</section>
+
+<section class="appointments-content container">
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading appointments..." />
+  } @else if (errorMessage()) {
+    <div class="empty-state">
+      <p class="empty-state__icon">&#9888;</p>
+      <p class="empty-state__text">{{ errorMessage() }}</p>
+    </div>
+  } @else if (appointments().length === 0) {
+    <div class="empty-state">
+      <p class="empty-state__icon">&#128197;</p>
+      <h3 class="empty-state__title">No Appointments Yet</h3>
+      <p class="empty-state__text">You haven't booked any appointments. Find a doctor and get started!</p>
+      <a class="btn btn--primary btn--lg" routerLink="/doctors">Find a Doctor</a>
+    </div>
+  } @else {
+    <div class="appointments-list">
+      @for (appt of appointments(); track appt.id) {
+        <article class="appt-card card">
+          <div class="appt-card__top">
+            <div class="appt-card__doctor-info">
+              <h3 class="appt-card__doctor">{{ appt.doctor_name }}</h3>
+              <span class="appt-card__specialization">{{ appt.doctor_specialization }}</span>
+            </div>
+            <span class="badge"
+              [class.badge--pending]="appt.status === 'pending'"
+              [class.badge--approved]="appt.status === 'approved'"
+              [class.badge--cancelled]="appt.status === 'cancelled'"
+            >
+              @if (appt.status === 'pending') {
+                &#9679; Pending Approval
+              } @else if (appt.status === 'approved') {
+                &#10003; Approved
+              } @else {
+                {{ appt.status }}
+              }
+            </span>
+          </div>
+
+          <div class="appt-card__details">
+            <div class="appt-card__detail">
+              <span class="appt-card__label">Date</span>
+              <span class="appt-card__value">{{ appt.appointment_date | date:'MMMM d, y' }}</span>
+            </div>
+            <div class="appt-card__detail">
+              <span class="appt-card__label">Time</span>
+              <span class="appt-card__value">{{ appt.appointment_time }}</span>
+            </div>
+            <div class="appt-card__detail">
+              <span class="appt-card__label">Patient</span>
+              <span class="appt-card__value">{{ appt.patient_name }}</span>
+            </div>
+          </div>
+
+          @if (appt.status === 'pending' || appt.status === 'approved') {
+            <div class="appt-card__actions">
+              <button class="btn btn--outline appt-card__cancel-btn" (click)="cancelAppointment(appt.id!)">
+                Cancel Appointment
+              </button>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,59 @@
+<section class="auth-page">
+  <div class="auth-card card">
+    <div class="auth-card__header">
+      <h1 class="auth-card__title">Welcome Back</h1>
+      <p class="auth-card__subtitle">Login to your DocBook account</p>
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="submitLogin(loginForm)">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="you&#64;example.com"
+          [(ngModel)]="email"
+          required
+          email
+          #emailField="ngModel"
+        />
+        @if (emailField.invalid && emailField.touched) {
+          <span class="form-error">Please enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+          #passwordField="ngModel"
+        />
+        @if (passwordField.invalid && passwordField.touched) {
+          <span class="form-error">Password must be at least 6 characters.</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-error form-error--global">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" class="btn btn--primary btn--block btn--lg" [disabled]="loginForm.invalid || isSubmitting()">
+        {{ isSubmitting() ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <p class="auth-card__footer">
+      Don't have an account? <a routerLink="/register">Create one</a>
+    </p>
+    <p class="auth-card__footer auth-card__footer--alt">
+      Doctor or hospital? <a routerLink="/doctor/login">Doctor portal</a> &nbsp;·&nbsp; <a routerLink="/hospital/login">Hospital portal</a>
+    </p>
+  </div>
+</section>

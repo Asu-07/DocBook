@@ -1,0 +1,102 @@
+<!-- Floating launcher -->
+<button
+  type="button"
+  class="chatbot-fab"
+  [class.chatbot-fab--open]="open()"
+  (click)="togglePanel()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="open() ? 'Close DocBook assistant' : 'Open DocBook assistant'"
+>
+  @if (!open()) {
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12a8 8 0 01-12.4 6.7L3 20l1.4-5A8 8 0 1121 12z" />
+      <path d="M9 11h.01M12 11h.01M15 11h.01" />
+    </svg>
+  } @else {
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  }
+</button>
+
+@if (open()) {
+  <section class="chatbot-panel" role="dialog" aria-label="DocBook assistant">
+    <header class="chatbot-panel__header">
+      <div class="chatbot-panel__heading">
+        <span class="chatbot-panel__avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3v6a4 4 0 008 0V3" />
+            <path d="M10 14v3a4 4 0 008 0v-2" />
+            <circle cx="18" cy="11" r="2" />
+          </svg>
+        </span>
+        <div>
+          <strong class="chatbot-panel__title">DocBook assistant</strong>
+          <small class="chatbot-panel__subtitle">Helps you find and book — not a doctor</small>
+        </div>
+      </div>
+      <button type="button" class="chatbot-panel__icon-btn" (click)="resetConversation()" aria-label="Clear conversation" title="Clear">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="chatbot-panel__messages" #messageList>
+      @for (msg of messages(); track msg.id) {
+        <div class="chatbot-msg" [class.chatbot-msg--user]="msg.role === 'user'" [class.chatbot-msg--bot]="msg.role === 'bot'">
+          <div class="chatbot-msg__bubble">{{ msg.text }}</div>
+          @if (msg.actions?.length) {
+            <div class="chatbot-msg__actions">
+              @for (action of msg.actions; track action.label) {
+                <button
+                  type="button"
+                  class="chatbot-chip"
+                  [class.chatbot-chip--primary]="action.kind === 'route'"
+                  (click)="onAction(action)"
+                >
+                  {{ action.label }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (thinking()) {
+        <div class="chatbot-msg chatbot-msg--bot">
+          <div class="chatbot-msg__bubble chatbot-msg__bubble--typing" aria-label="Assistant is typing">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <footer class="chatbot-panel__footer">
+      <div class="chatbot-input">
+        <textarea
+          #chatInput
+          rows="1"
+          class="chatbot-input__field"
+          placeholder="Ask about a specialty, a city, or 'book an appointment'…"
+          [ngModel]="draft()"
+          (ngModelChange)="draft.set($event)"
+          (keydown)="onInputKeydown($event)"
+          [disabled]="thinking()"
+        ></textarea>
+        <button
+          type="button"
+          class="chatbot-input__send"
+          (click)="sendDraft()"
+          [disabled]="!draft().trim() || thinking()"
+          aria-label="Send"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+      <p class="chatbot-disclaimer">Rule-based assistant — no medical advice. For emergencies call 118.</p>
+    </footer>
+  </section>
+}

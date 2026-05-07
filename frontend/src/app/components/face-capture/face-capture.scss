@@ -1,0 +1,181 @@
+@keyframes faceModalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.face-capture {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 14, 24, 0.55);
+    backdrop-filter: blur(2px);
+  }
+
+  &__panel {
+    position: relative;
+    width: min(440px, 100%);
+    background: var(--color-bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 60px rgba(8, 14, 24, 0.35);
+    overflow: hidden;
+    animation: faceModalIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  &__title {
+    font-size: var(--font-lg);
+    font-weight: 800;
+    margin: 0;
+  }
+
+  &__close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    svg { width: 16px; height: 16px; }
+
+    &:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+  }
+
+  &__viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #0e1b2a;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Mirror so the user sees themselves like a mirror, not reversed. */
+    transform: scaleX(-1);
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__frame {
+    width: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.2) inset;
+  }
+
+  &__viewport[data-status='streaming'] &__frame {
+    animation: facePulse 1.6s ease-in-out infinite;
+  }
+
+  &__viewport[data-status='capturing'] &__frame {
+    border-color: rgba(46, 204, 113, 0.85);
+  }
+
+  &__notice {
+    position: absolute;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-dark);
+    font-size: var(--font-sm);
+    text-align: center;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+
+    &--success {
+      background: rgba(16, 185, 129, 0.92);
+      color: #fff;
+    }
+
+    &--error {
+      background: rgba(239, 68, 68, 0.94);
+      color: #fff;
+
+      .btn--outline {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.6);
+
+        &:hover {
+          background: #fff;
+          color: var(--color-error);
+          border-color: #fff;
+        }
+      }
+    }
+  }
+
+  &__hint {
+    position: absolute;
+    bottom: var(--space-4);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-full);
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: var(--font-xs);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  &__footer {
+    padding: var(--space-3) var(--space-5) var(--space-4);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border-light);
+  }
+
+  &__disclaimer {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.45;
+  }
+}
+
+@keyframes facePulse {
+  0%, 100% { border-color: rgba(255, 255, 255, 0.5); }
+  50%      { border-color: rgba(29, 111, 184, 0.85); }
+}

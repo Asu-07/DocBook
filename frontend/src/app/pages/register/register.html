@@ -1,0 +1,118 @@
+<section class="auth-page">
+  <div class="auth-card card">
+    <div class="auth-card__header">
+      <h1 class="auth-card__title">Create Account</h1>
+      <p class="auth-card__subtitle">Join DocBook to book appointments instantly</p>
+    </div>
+
+    <form #registerForm="ngForm" (ngSubmit)="submitRegister(registerForm)">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          placeholder="Your full name"
+          [(ngModel)]="name"
+          required
+          minlength="2"
+          #nameField="ngModel"
+        />
+        @if (nameField.invalid && nameField.touched) {
+          <span class="form-error">Name must be at least 2 characters.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="you&#64;example.com"
+          [(ngModel)]="email"
+          required
+          email
+          #emailField="ngModel"
+        />
+        @if (emailField.invalid && emailField.touched) {
+          <span class="form-error">Please enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Min 6 characters"
+            [(ngModel)]="password"
+            required
+            minlength="6"
+            #passwordField="ngModel"
+          />
+          @if (passwordField.invalid && passwordField.touched) {
+            <span class="form-error">Min 6 characters.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            placeholder="Re-enter password"
+            [(ngModel)]="confirmPassword"
+            required
+            #confirmField="ngModel"
+          />
+          @if (confirmField.touched && confirmPassword !== password) {
+            <span class="form-error">Passwords don't match.</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>I am registering as</label>
+        <div class="role-selector">
+          <label class="role-option" [class.role-option--active]="role === 'user'">
+            <input type="radio" name="role" value="user" [(ngModel)]="role" />
+            <span class="role-option__icon">&#128100;</span>
+            <span class="role-option__label">Patient</span>
+          </label>
+          <label class="role-option" [class.role-option--active]="role === 'doctor'">
+            <input type="radio" name="role" value="doctor" [(ngModel)]="role" />
+            <span class="role-option__icon">&#129657;</span>
+            <span class="role-option__label">Doctor</span>
+          </label>
+        </div>
+      </div>
+
+      @if (passwordMismatch) {
+        <p class="form-error form-error--global">Passwords do not match.</p>
+      }
+      @if (errorMessage()) {
+        <p class="form-error form-error--global">{{ errorMessage() }}</p>
+      }
+
+      <button
+        type="submit"
+        class="btn btn--primary btn--block btn--lg"
+        [disabled]="registerForm.invalid || password !== confirmPassword || isSubmitting()"
+      >
+        {{ isSubmitting() ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <p class="auth-card__footer">
+      Already have an account? <a routerLink="/login">Sign in</a>
+    </p>
+    <p class="auth-card__footer auth-card__footer--secondary">
+      Registering as a doctor? <a routerLink="/doctor/register">Doctor registration</a> &nbsp;·&nbsp;
+      Hospital? <a routerLink="/hospital/register">Hospital registration</a>
+    </p>
+  </div>
+</section>

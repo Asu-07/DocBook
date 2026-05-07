@@ -1,0 +1,141 @@
+<section class="page-header page-header--admin">
+  <div class="container">
+    <h1 class="page-header__title">Admin Dashboard</h1>
+    <p class="page-header__subtitle">Manage and monitor the entire DocBook platform</p>
+  </div>
+</section>
+
+<section class="admin-content container">
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading dashboard..." />
+  } @else {
+    <!-- Stats -->
+    @if (stats()) {
+      <div class="admin-stats">
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ stats()!.total_users }}</span>
+          <span class="stat-card__label">Total Users</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ stats()!.total_doctors }}</span>
+          <span class="stat-card__label">Doctors</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ stats()!.total_hospitals }}</span>
+          <span class="stat-card__label">Hospitals</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value stat-card__value--success">{{ stats()!.booked_appointments }}</span>
+          <span class="stat-card__label">Active Bookings</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value stat-card__value--muted">{{ stats()!.cancelled_appointments }}</span>
+          <span class="stat-card__label">Cancelled</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ stats()!.total_appointments }}</span>
+          <span class="stat-card__label">Total Appointments</span>
+        </div>
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab" [class.admin-tab--active]="activeTab() === 'users'" (click)="activeTab.set('users')">
+        Users ({{ users().length }})
+      </button>
+      <button class="admin-tab" [class.admin-tab--active]="activeTab() === 'appointments'" (click)="activeTab.set('appointments')">
+        Appointments ({{ appointments().length }})
+      </button>
+      <button class="admin-tab" [class.admin-tab--active]="activeTab() === 'hospitals'" (click)="activeTab.set('hospitals')">
+        Hospitals ({{ hospitals().length }})
+      </button>
+    </div>
+
+    <!-- Users Table -->
+    @if (activeTab() === 'users') {
+      <div class="admin-table-wrap card animate-fade-in">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users(); track u.id) {
+              <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+                <td><span class="badge badge--{{ u.role === 'admin' ? 'pending' : u.role === 'doctor' ? 'booked' : 'cancelled' }}">{{ u.role }}</span></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="admin-table__empty">No users found</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Appointments Table -->
+    @if (activeTab() === 'appointments') {
+      <div class="admin-table-wrap card animate-fade-in">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of appointments(); track a.id) {
+              <tr>
+                <td>{{ a.patient_name }}</td>
+                <td>{{ a.doctor_name }}</td>
+                <td>{{ a.appointment_date }}</td>
+                <td>{{ a.appointment_time }}</td>
+                <td><span class="badge" [class.badge--pending]="a.status === 'pending'" [class.badge--approved]="a.status === 'approved'" [class.badge--cancelled]="a.status === 'cancelled'">{{ a.status }}</span></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="admin-table__empty">No appointments found</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Hospitals Table -->
+    @if (activeTab() === 'hospitals') {
+      <div class="admin-table-wrap card animate-fade-in">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Hospital Name</th>
+              <th>Address</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (h of hospitals(); track h.id) {
+              <tr>
+                <td>{{ h.id }}</td>
+                <td>{{ h.name }}</td>
+                <td>{{ h.address || '—' }}</td>
+                <td>{{ h.phone || '—' }}</td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="admin-table__empty">No hospitals registered yet</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

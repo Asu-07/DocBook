@@ -1,0 +1,29 @@
+@if (open()) {
+  <div class="sidebar-backdrop" (click)="close()"></div>
+}
+
+<aside class="sidebar" [class.sidebar--open]="open()">
+  <div class="sidebar__header">
+    <h2 class="sidebar__title">My Account</h2>
+    <button class="sidebar__close" (click)="close()">&times;</button>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a routerLink="/profile" routerLinkActive="active" (click)="close()">My Profile</a>
+
+    @if (role === 'user' || role === 'doctor') {
+      <a routerLink="/my-appointments" routerLinkActive="active" (click)="close()">My Appointments</a>
+    }
+    @if (role === 'doctor') {
+      <a routerLink="/doctor-dashboard" routerLinkActive="active" (click)="close()">Doctor Dashboard</a>
+    }
+    @if (role === 'hospital') {
+      <a routerLink="/hospital/dashboard" routerLinkActive="active" (click)="close()">Hospital Dashboard</a>
+    }
+    @if (role === 'admin') {
+      <a routerLink="/admin" routerLinkActive="active" (click)="close()">Admin Dashboard</a>
+    }
+
+    <button class="sidebar__logout" (click)="logout()">Logout</button>
+  </nav>
+</aside>

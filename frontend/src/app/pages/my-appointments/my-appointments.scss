@@ -1,0 +1,120 @@
+.page-header {
+  background: linear-gradient(135deg, var(--color-dark) 0%, #16263d 100%);
+  padding: var(--space-12) 0;
+
+  &__title {
+    font-size: var(--font-3xl);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: var(--space-2);
+  }
+
+  &__subtitle {
+    font-size: var(--font-base);
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.appointments-content {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-16);
+  max-width: 800px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  animation: fadeIn 0.4s ease;
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-4);
+  }
+
+  &__title {
+    font-size: var(--font-xl);
+    margin-bottom: var(--space-3);
+  }
+
+  &__text {
+    font-size: var(--font-base);
+    color: var(--color-text-muted);
+    max-width: 400px;
+    margin: 0 auto var(--space-6);
+  }
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: fadeIn 0.4s ease;
+}
+
+.appt-card {
+  padding: var(--space-6);
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    gap: var(--space-4);
+  }
+
+  &__doctor {
+    font-size: var(--font-lg);
+    font-weight: 700;
+    margin: 0 0 var(--space-1);
+  }
+
+  &__specialization {
+    font-size: var(--font-sm);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  &__details {
+    display: flex;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  &__detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__label {
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-light);
+    font-weight: 700;
+  }
+
+  &__value {
+    font-size: var(--font-sm);
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  &__actions {
+    padding-top: var(--space-4);
+  }
+
+  &__cancel-btn {
+    color: var(--color-error) !important;
+    border-color: var(--color-error) !important;
+    font-size: var(--font-xs);
+    padding: 0.4rem 1rem;
+
+    &:hover {
+      background: var(--color-error) !important;
+      color: #fff !important;
+    }
+  }
+}

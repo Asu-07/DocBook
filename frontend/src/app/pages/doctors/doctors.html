@@ -1,0 +1,66 @@
+<section class="doctors-hero">
+  <div class="container">
+    <h1 class="doctors-hero__title">Our Doctors</h1>
+    <p class="doctors-hero__subtitle">Find and book an appointment with the best specialists</p>
+    @if (regionHint()) {
+      <p class="doctors-hero__region-hint">Showing network-wide doctors · city preference: <strong>{{ regionHint() }}</strong></p>
+    }
+    <div class="doctors-hero__search-wrap">
+      <span class="doctors-hero__search-icon">&#128269;</span>
+      <input
+        class="doctors-hero__search"
+        type="text"
+        placeholder="Search by name or specialization..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="onSearchInput($event)"
+        (keydown)="onSearchKeydown($event)"
+        (blur)="resetSuggestionSelection()"
+      />
+      @if (suggestions().length) {
+        <ul class="doctors-hero__suggestions" role="listbox" aria-label="Search suggestions">
+          @for (item of suggestions(); track item; let idx = $index) {
+            <li>
+              <button
+                type="button"
+                class="doctors-hero__suggestion-item"
+                [class.doctors-hero__suggestion-item--active]="idx === activeSuggestionIndex()"
+                (mousedown)="applySuggestion(item)"
+              >
+                {{ item }}
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="doctors-content container">
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading doctors..." />
+  } @else if (errorMessage()) {
+    <div class="doctors-error">
+      <p>{{ errorMessage() }}</p>
+      <button class="btn btn--primary" (click)="reload()">Try Again</button>
+    </div>
+  } @else {
+    <div class="doctors-grid">
+      @for (doctor of filteredDoctors(); track doctor.id) {
+        <app-doctor-card
+          [doctorId]="doctor.id"
+          [name]="doctor.name"
+          [specialization]="doctor.specialization"
+          [experience]="doctor.experience_years"
+          [rating]="doctor.rating"
+          [image]="doctor.image"
+        />
+      } @empty {
+        <div class="doctors-empty">
+          <p class="doctors-empty__text">No doctors found matching "{{ searchTerm() }}"</p>
+          <button class="btn btn--outline" (click)="searchTerm.set('')">Clear Search</button>
+        </div>
+      }
+    </div>
+  }
+</section>

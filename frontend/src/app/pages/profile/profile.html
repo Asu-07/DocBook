@@ -1,0 +1,21 @@
+<section class="profile-page">
+  @if (user()) {
+    <div class="profile-card card animate-fade-in">
+      <div class="profile-card__avatar">{{ user()!.name.charAt(0).toUpperCase() }}</div>
+      <h1 class="profile-card__name">{{ user()!.name }}</h1>
+      <p class="profile-card__email">{{ user()!.email }}</p>
+      <span class="badge" [class.badge--booked]="user()!.role === 'doctor'">
+        {{ user()!.role === 'doctor' ? 'Doctor' : 'Patient' }}
+      </span>
+
+      <div class="profile-card__links">
+        <a class="btn btn--primary btn--block" routerLink="/my-appointments">My Appointments</a>
+        @if (user()!.role === 'doctor') {
+          <a class="btn btn--outline btn--block" routerLink="/doctor-dashboard">Doctor Dashboard</a>
+        }
+      </div>
+    </div>
+  } @else {
+    <app-loading-spinner message="Loading profile..." />
+  }
+</section>

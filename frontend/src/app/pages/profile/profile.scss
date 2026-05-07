@@ -1,0 +1,51 @@
+.profile-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6);
+  min-height: calc(100vh - 140px);
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-10) var(--space-8);
+  text-align: center;
+
+  &__avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-5);
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+    font-size: var(--font-3xl);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(29, 111, 184, 0.3);
+  }
+
+  &__name {
+    font-size: var(--font-2xl);
+    font-weight: 800;
+    margin-bottom: var(--space-1);
+  }
+
+  &__email {
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .badge {
+    margin-bottom: var(--space-8);
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}

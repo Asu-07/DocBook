@@ -1,0 +1,52 @@
+@if (open) {
+  <div class="face-capture" role="dialog" aria-modal="true" [attr.aria-label]="title">
+    <div class="face-capture__backdrop" (click)="cancel()"></div>
+    <div class="face-capture__panel">
+      <header class="face-capture__header">
+        <h2 class="face-capture__title">{{ title }}</h2>
+        <button type="button" class="face-capture__close" (click)="cancel()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="face-capture__viewport" [attr.data-status]="status()">
+        <video #videoEl class="face-capture__video" autoplay playsinline muted></video>
+        <div class="face-capture__overlay" aria-hidden="true">
+          <div class="face-capture__frame"></div>
+        </div>
+
+        @if (status() === 'loading') {
+          <div class="face-capture__notice">
+            Loading face model… first time may take a few seconds.
+          </div>
+        }
+        @if (status() === 'streaming') {
+          <div class="face-capture__hint">
+            Position your face inside the frame and hold still.
+          </div>
+        }
+        @if (status() === 'capturing') {
+          <div class="face-capture__notice face-capture__notice--success">
+            Face captured. Verifying…
+          </div>
+        }
+        @if (status() === 'error') {
+          <div class="face-capture__notice face-capture__notice--error">
+            <p>{{ errorText() }}</p>
+            <button type="button" class="btn btn--outline btn--sm" (click)="retry()">Try again</button>
+          </div>
+        }
+      </div>
+
+      <footer class="face-capture__footer">
+        <p class="face-capture__disclaimer">
+          {{ mode === 'enroll'
+            ? 'Your face descriptor (a 128-number vector) is stored locally in DocBook. No raw images are uploaded.'
+            : 'Your face is checked locally — only the descriptor leaves the browser, never a photo.' }}
+        </p>
+      </footer>
+    </div>
+  </div>
+}

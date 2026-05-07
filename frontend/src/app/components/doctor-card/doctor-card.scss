@@ -1,0 +1,68 @@
+.doctor-card {
+  overflow: hidden;
+
+  &__image-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  &:hover &__image {
+    transform: scale(1.05);
+  }
+
+  &__rating {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: var(--font-xs);
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-full);
+  }
+
+  &__star {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex-shrink: 0;
+    color: #f0b429;
+  }
+
+  &__body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__name {
+    font-size: var(--font-base);
+    font-weight: 700;
+    color: var(--color-dark);
+    margin: 0;
+  }
+
+  &__specialization {
+    font-size: var(--font-sm);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  &__experience {
+    font-size: var(--font-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+}

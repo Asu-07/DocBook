@@ -1,0 +1,51 @@
+# ---------- Python (backend) ----------
+backend/.venv/
+backend/venv/
+backend/env/
+backend/__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local SQLite database (regenerable via `python seed_demo.py`)
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+
+# Backend env files (real secrets) — keep .env.example checked in
+backend/.env
+backend/.env.local
+backend/.env.*.local
+
+# ---------- Node / Angular (frontend) ----------
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+frontend/npm-debug.log*
+frontend/yarn-error.log*
+frontend/yarn-debug.log*
+
+# Angular dev sourcemap noise
+*.tsbuildinfo
+
+# ---------- Editor / OS ----------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Optional: ignore the empty scaffolding directories that were never used
+frontend/luxury-cam-store/
+frontend/pages/

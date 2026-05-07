@@ -1,0 +1,225 @@
+<section class="page-header page-header--hospital">
+  <div class="container">
+    @if (dashboard()) {
+      <h1 class="page-header__title">{{ dashboard()!.hospital.name }}</h1>
+      <p class="page-header__subtitle">Hospital Management Dashboard</p>
+    } @else {
+      <h1 class="page-header__title">Hospital Dashboard</h1>
+    }
+  </div>
+</section>
+
+<section class="hosp-content container">
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading dashboard..." />
+  } @else {
+    <!-- Stats -->
+    @if (dashboard()) {
+      <div class="hosp-stats">
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ dashboard()!.total_doctors }}</span>
+          <span class="stat-card__label">Doctors</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ dashboard()!.total_patients }}</span>
+          <span class="stat-card__label">Patients</span>
+        </div>
+        <div class="stat-card card">
+          <span class="stat-card__value">{{ dashboard()!.total_appointments }}</span>
+          <span class="stat-card__label">Appointments</span>
+        </div>
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="hosp-tabs">
+      <button class="hosp-tab" [class.hosp-tab--active]="activeTab() === 'doctors'" (click)="activeTab.set('doctors')">
+        Doctors ({{ doctors().length }})
+      </button>
+      <button class="hosp-tab" [class.hosp-tab--active]="activeTab() === 'patients'" (click)="activeTab.set('patients')">
+        Patients ({{ patients().length }})
+      </button>
+      <button class="hosp-tab" [class.hosp-tab--active]="activeTab() === 'appointments'" (click)="activeTab.set('appointments')">
+        Appointments ({{ appointments().length }})
+      </button>
+    </div>
+
+    <!-- Doctors Tab -->
+    @if (activeTab() === 'doctors') {
+      <div class="animate-fade-in">
+        <!-- Add Doctor Button -->
+        <div class="hosp-toolbar">
+          <button class="btn btn--primary btn--sm" (click)="showAddDoctor.set(!showAddDoctor())">
+            {{ showAddDoctor() ? 'Cancel' : '+ Add Doctor' }}
+          </button>
+        </div>
+
+        <!-- Add Doctor Form -->
+        @if (showAddDoctor()) {
+          <div class="add-doctor-form card animate-fade-in">
+            <h3 class="add-doctor-form__title">Add New Doctor</h3>
+            <form #addDocForm="ngForm" (ngSubmit)="submitAddDoctor(addDocForm)">
+              <div class="form-row form-row--3">
+                <div class="form-group">
+                  <label for="docName">Doctor Name</label>
+                  <input
+                    id="docName"
+                    type="text"
+                    name="newDoctorName"
+                    placeholder="Dr. John Smith"
+                    [(ngModel)]="newDoctorName"
+                    required
+                    minlength="2"
+                    #nameField="ngModel"
+                  />
+                  @if (nameField.invalid && nameField.touched) {
+                    <span class="form-error">Name is required.</span>
+                  }
+                </div>
+                <div class="form-group">
+                  <label for="docSpec">Specialization</label>
+                  <input
+                    id="docSpec"
+                    type="text"
+                    name="newDoctorSpec"
+                    placeholder="Cardiologist"
+                    [(ngModel)]="newDoctorSpec"
+                    required
+                    #specField="ngModel"
+                  />
+                  @if (specField.invalid && specField.touched) {
+                    <span class="form-error">Specialization is required.</span>
+                  }
+                </div>
+                <div class="form-group">
+                  <label for="docExp">Experience (years)</label>
+                  <input
+                    id="docExp"
+                    type="number"
+                    name="newDoctorExp"
+                    placeholder="5"
+                    [(ngModel)]="newDoctorExp"
+                    required
+                    min="0"
+                    #expField="ngModel"
+                  />
+                  @if (expField.invalid && expField.touched) {
+                    <span class="form-error">Experience is required.</span>
+                  }
+                </div>
+              </div>
+              <button type="submit" class="btn btn--primary" [disabled]="addDocForm.invalid || isAddingDoctor()">
+                {{ isAddingDoctor() ? 'Adding...' : 'Add Doctor' }}
+              </button>
+            </form>
+          </div>
+        }
+
+        <!-- Doctors Table -->
+        <div class="hosp-table-wrap card">
+          @if (doctors().length === 0) {
+            <div class="hosp-empty">
+              <p>No doctors linked to your hospital yet.</p>
+              <p class="hosp-empty__hint">Click "Add Doctor" above to get started.</p>
+            </div>
+          } @else {
+            <table class="hosp-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Specialization</th>
+                  <th>Experience</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (doc of doctors(); track doc.id) {
+                  <tr>
+                    <td class="hosp-table__bold">{{ doc.name }}</td>
+                    <td>{{ doc.specialization }}</td>
+                    <td>{{ doc.experience_years }} years</td>
+                    <td>&#9733; {{ doc.rating }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Patients Tab -->
+    @if (activeTab() === 'patients') {
+      <div class="hosp-table-wrap card animate-fade-in">
+        @if (patients().length === 0) {
+          <div class="hosp-empty">
+            <p>No patient data yet.</p>
+          </div>
+        } @else {
+          <table class="hosp-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Total Appointments</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of patients(); track p.id) {
+                <tr>
+                  <td class="hosp-table__bold">{{ p.name }}</td>
+                  <td>{{ p.email }}</td>
+                  <td>{{ p.total_appointments }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    }
+
+    <!-- Appointments Tab -->
+    @if (activeTab() === 'appointments') {
+      <div class="hosp-table-wrap card animate-fade-in">
+        @if (appointments().length === 0) {
+          <div class="hosp-empty">
+            <p>No appointments yet.</p>
+          </div>
+        } @else {
+          <table class="hosp-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of appointments(); track a.id) {
+                <tr>
+                  <td>{{ a.patient_name }}</td>
+                  <td>{{ a.doctor_name }}</td>
+                  <td>{{ a.appointment_date }}</td>
+                  <td>{{ a.appointment_time }}</td>
+                  <td><span class="badge" [class.badge--pending]="a.status === 'pending'" [class.badge--approved]="a.status === 'approved'" [class.badge--cancelled]="a.status === 'cancelled'">{{ a.status }}</span></td>
+                  <td>
+                    @if (a.status === 'pending') {
+                      <button class="btn btn--primary btn--sm" [disabled]="confirmingId() === a.id" (click)="confirmWithPrompt(a.id)">
+                        {{ confirmingId() === a.id ? 'Confirming...' : 'Accept & Assign Date' }}
+                      </button>
+                    } @else {
+                      <span class="label-hint">-</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    }
+  }
+</section>

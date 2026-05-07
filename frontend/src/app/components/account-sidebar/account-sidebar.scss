@@ -1,0 +1,104 @@
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background: var(--color-bg-white);
+  box-shadow: var(--shadow-xl);
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-lg);
+    font-weight: 700;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: var(--color-text-light);
+    cursor: pointer;
+    line-height: 1;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+
+    &:hover {
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-4) 0;
+    flex: 1;
+
+    a {
+      padding: 0.85rem var(--space-6);
+      color: var(--color-text);
+      font-size: var(--font-sm);
+      font-weight: 500;
+      transition: all var(--transition-fast);
+
+      &:hover {
+        background: var(--color-bg);
+      }
+
+      &.active {
+        color: var(--color-primary);
+        background: var(--color-primary-light);
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__logout {
+    margin: var(--space-4) var(--space-6);
+    padding: 0.7rem;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-primary-dark);
+    }
+  }
+}

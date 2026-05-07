@@ -1,0 +1,142 @@
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-header__title">Doctor Dashboard</h1>
+    <p class="page-header__subtitle">Welcome back, {{ doctorName() }}</p>
+  </div>
+</section>
+
+<section class="dash-content container">
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading dashboard..." />
+  } @else if (errorMessage()) {
+    <div class="empty-state">
+      <p class="empty-state__icon">&#9888;</p>
+      <p class="empty-state__text">{{ errorMessage() }}</p>
+    </div>
+  } @else {
+    <!-- Face ID enrollment -->
+    <div class="face-enroll-card card">
+      <div class="face-enroll-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7V5a2 2 0 012-2h2M16 3h2a2 2 0 012 2v2M20 17v2a2 2 0 01-2 2h-2M8 21H6a2 2 0 01-2-2v-2" />
+          <circle cx="9" cy="11" r="1" />
+          <circle cx="15" cy="11" r="1" />
+          <path d="M9.5 15c1 1 3 1 5 0" />
+        </svg>
+      </div>
+      <div class="face-enroll-card__body">
+        <h3 class="face-enroll-card__title">
+          Face ID
+          @if (faceEnrolled()) {
+            <span class="face-enroll-card__pill face-enroll-card__pill--on">Enabled</span>
+          } @else {
+            <span class="face-enroll-card__pill">Not set up</span>
+          }
+        </h3>
+        <p class="face-enroll-card__desc">
+          @if (faceEnrolled()) {
+            You can sign in to the doctor portal using your face. Re-enroll if your appearance changed (lighting, glasses).
+          } @else {
+            Skip the password — set up Face ID once and sign in instantly. Models run in your browser; no photos leave your device.
+          }
+        </p>
+      </div>
+      <div class="face-enroll-card__actions">
+        @if (faceEnrolled()) {
+          <button class="btn btn--outline btn--sm" (click)="openFaceEnroll()" [disabled]="faceBusy()">Re-enroll</button>
+          <button class="btn btn--ghost btn--sm" (click)="removeFaceEnrollment()" [disabled]="faceBusy()">Remove</button>
+        } @else {
+          <button class="btn btn--primary btn--sm" (click)="openFaceEnroll()" [disabled]="faceBusy()">
+            {{ faceBusy() ? 'Saving…' : 'Set up Face ID' }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="dash-stats">
+      <div class="dash-stat card">
+        <span class="dash-stat__value">{{ totalAppointments() }}</span>
+        <span class="dash-stat__label">Total</span>
+      </div>
+      <div class="dash-stat card">
+        <span class="dash-stat__value dash-stat__value--pending">{{ pendingCount() }}</span>
+        <span class="dash-stat__label">Pending Approval</span>
+      </div>
+      <div class="dash-stat card">
+        <span class="dash-stat__value dash-stat__value--success">{{ approvedCount() }}</span>
+        <span class="dash-stat__label">Approved</span>
+      </div>
+    </div>
+
+    <h2 class="dash-section-title">All Appointments</h2>
+
+    @if (appointments().length === 0) {
+      <div class="empty-state">
+        <p class="empty-state__icon">&#128197;</p>
+        <h3 class="empty-state__title">No Appointments</h3>
+        <p class="empty-state__text">You don't have any patient appointments yet.</p>
+      </div>
+    } @else {
+      <div class="dash-list">
+        @for (appt of appointments(); track appt.id) {
+          <article class="dash-card card" [class.dash-card--pending]="appt.status === 'pending'">
+            <div class="dash-card__top">
+              <div>
+                <h3 class="dash-card__patient">{{ appt.patient_name }}</h3>
+                <span class="dash-card__email">{{ appt.patient_email }}</span>
+              </div>
+              <span class="badge"
+                [class.badge--pending]="appt.status === 'pending'"
+                [class.badge--approved]="appt.status === 'approved'"
+                [class.badge--cancelled]="appt.status === 'cancelled'"
+              >
+                @if (appt.status === 'pending') {
+                  &#9679; Pending
+                } @else if (appt.status === 'approved') {
+                  &#10003; Approved
+                } @else {
+                  {{ appt.status }}
+                }
+              </span>
+            </div>
+
+            <div class="dash-card__details">
+              <div class="dash-card__detail">
+                <span class="dash-card__label">Date</span>
+                <span class="dash-card__value">{{ appt.appointment_date | date:'MMMM d, y' }}</span>
+              </div>
+              <div class="dash-card__detail">
+                <span class="dash-card__label">Time</span>
+                <span class="dash-card__value">{{ appt.appointment_time }}</span>
+              </div>
+            </div>
+
+            @if (appt.notes) {
+              <div class="dash-card__notes">
+                <span class="dash-card__label">Notes</span>
+                <p class="dash-card__value">{{ appt.notes }}</p>
+              </div>
+            }
+
+            @if (appt.status === 'pending') {
+              <div class="dash-card__actions">
+                <button class="btn btn--approve" (click)="approveAppointment(appt.id!)">
+                  &#10003; Approve Appointment
+                </button>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    }
+  }
+</section>
+
+<app-face-capture
+  [open]="faceModalOpen()"
+  mode="enroll"
+  title="Set up Face ID"
+  (captured)="onFaceCaptured($event)"
+  (cancelled)="onFaceCancelled()"
+/>

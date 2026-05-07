@@ -1,0 +1,46 @@
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a class="navbar__brand" routerLink="/" (click)="closeMobile()">
+      <span class="navbar__brand-icon">+</span>
+      DocBook
+    </a>
+
+    <button class="navbar__hamburger" (click)="toggleMobile()" [attr.aria-expanded]="mobileMenuOpen()" aria-label="Toggle menu">
+      <span class="navbar__hamburger-line" [class.open]="mobileMenuOpen()"></span>
+    </button>
+
+    <div class="navbar__menu" [class.navbar__menu--open]="mobileMenuOpen()">
+      <ul class="navbar__links">
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobile()">Home</a></li>
+        <li><a routerLink="/doctors" routerLinkActive="active" (click)="closeMobile()">Doctors</a></li>
+
+        @if (isLoggedIn && (role === 'user' || role === 'doctor')) {
+          <li><a routerLink="/book-appointment" routerLinkActive="active" (click)="closeMobile()">Book Appointment</a></li>
+          <li><a routerLink="/my-appointments" routerLinkActive="active" (click)="closeMobile()">My Appointments</a></li>
+        }
+
+        @if (isLoggedIn && role === 'admin') {
+          <li><a routerLink="/admin" routerLinkActive="active" (click)="closeMobile()">Admin Dashboard</a></li>
+        }
+
+        @if (isLoggedIn && role === 'hospital') {
+          <li><a routerLink="/hospital/dashboard" routerLinkActive="active" (click)="closeMobile()">Hospital Dashboard</a></li>
+        }
+      </ul>
+
+      <div class="navbar__actions">
+        @if (isLoggedIn) {
+          <button class="navbar__account-btn" (click)="toggleSidebar(); closeMobile()">
+            <span class="navbar__account-avatar">&#9783;</span>
+            My Account
+          </button>
+        } @else {
+          <a class="navbar__login-link" routerLink="/login" routerLinkActive="active" (click)="closeMobile()">Login</a>
+          <a class="btn btn--primary btn--sm" routerLink="/register" (click)="closeMobile()">Sign up</a>
+        }
+      </div>
+    </div>
+  </div>
+</nav>
+
+<app-account-sidebar [open]="sidebarOpen" (closed)="closeSidebar()" />

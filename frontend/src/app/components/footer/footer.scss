@@ -1,0 +1,106 @@
+.footer {
+  position: relative;
+  background: linear-gradient(180deg, #0a0f1a 0%, var(--color-dark) 40%, #080c14 100%);
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: auto;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(14, 179, 154, 0.35), transparent);
+  }
+
+  &__inner {
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: var(--space-16) var(--space-6) var(--space-10);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: var(--space-8);
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__logo {
+    font-size: var(--font-2xl);
+    font-weight: 800;
+    background: linear-gradient(135deg, #7ec3f0 0%, var(--color-primary) 50%, var(--color-accent) 110%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: block;
+    margin-bottom: var(--space-3);
+
+    &::after {
+      content: '';
+      display: block;
+      width: 52px;
+      height: 2px;
+      margin-top: var(--space-3);
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      opacity: 0.9;
+    }
+  }
+
+  &__tagline {
+    font-size: var(--font-sm);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+
+  &__heading {
+    font-size: var(--font-sm);
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-4);
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    a {
+      font-size: var(--font-sm);
+      transition: color var(--transition-fast);
+
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+
+    p {
+      font-size: var(--font-sm);
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--space-6);
+    text-align: center;
+
+    p {
+      font-size: var(--font-xs);
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+}
